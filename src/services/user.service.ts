@@ -58,7 +58,16 @@ export const userServices = {
     return checkExsist
   },
   login: async (payload: Pick<UserType, 'email' | 'password'>) => {
-    const response = (await userModel.findOne({ email: payload.email })) as UserType
+    const response = (await userModel.findOne({
+      email: payload.email,
+      password: hashPassword(payload.password)
+    })) as UserType
+    if (!response) {
+      return {
+        message: 'Invalid email or password',
+        data: null
+      }
+    }
     const [access_token, refresh_token] = await Promise.all([
       userServices.access_token(response._id as unknown as string),
       userServices.refresh_token(response._id as unknown as string),

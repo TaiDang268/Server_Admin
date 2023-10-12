@@ -7,6 +7,7 @@ export const userSchema: Schema<UserType> = new mongoose.Schema(
     username: { type: String, default: '' },
     password: { type: String, default: '' },
     email: { type: String, default: '' },
+    role: { type: String, default: 'user' },
     created_at: { type: Date, default: date },
     updated_at: { type: Date, default: date }
   },

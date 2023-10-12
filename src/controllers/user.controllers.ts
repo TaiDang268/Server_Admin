@@ -14,5 +14,10 @@ export const userController = {
     } catch (err) {
       console.log(err)
     }
+  },
+  login: async (req: Request<ParamsDictionary, any, Pick<UserType, 'password' | 'email'>>, res: Response) => {
+    const result = await userServices.login(req.body)
+    console.log(result)
+    return res.json(result)
   }
 }
