@@ -86,6 +86,16 @@ export const userServices = {
       }
     }
   },
+  logout: async (user_id: string) => {
+    try {
+      await refreshTokenModel.deleteMany({ user_id: user_id })
+      return {
+        message: 'logout successfully'
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  },
   refreshToken: async (refreshToken: string, user_id: string, exp: number) => {
     const [access_token, refresh_token] = await Promise.all([
       userServices.access_token(user_id),
@@ -99,42 +109,6 @@ export const userServices = {
         access_token,
         refresh_token
       }
-    }
-  },
-  logout: async (user_id: string) => {
-    try {
-      await refreshTokenModel.deleteMany({ user_id: user_id })
-      return {
-        message: 'logout successfully'
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  },
-  forgotPassword: async (_id: ObjectId) => {
-    const response = await userModel.findById({ _id })
-    return {
-      data: response,
-      message: 'forgot password successfully'
-    }
-  },
-  resetPassword: async ({ new_password, _id }: { new_password: string; _id: string }) => {
-    await userModel.findOneAndUpdate(
-      { _id: new mongoose.Types.ObjectId(_id) },
-      {
-        $set: {
-          password: hashPassword(new_password)
-        },
-        $currentDate: {
-          updated_at: true
-        }
-      },
-      {
-        new: true
-      }
-    )
-    return {
-      message: 'resetpassword successfully'
     }
   }
 }
